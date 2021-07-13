@@ -7,6 +7,7 @@ const diceEl = document.querySelector('.dice');
 const btnNew = document.querySelector('.btn--new');
 const btnRoll = document.querySelector('.btn--roll');
 const btnHold = document.querySelector('.btn--hold');
+const btnRule = document.querySelector('.btn--rule'); // new
 const current0El = document.querySelector('#current--0');
 const current1El = document.querySelector('#current--1');
 const playersEl = document.querySelectorAll('.player');
@@ -38,7 +39,37 @@ const init = function () {
   playersEl[1].classList.remove('player--winner');
   playersEl[0].classList.add('player--active');
   playersEl[1].classList.remove('player--active');
+
+  document.querySelectorAll('.current-label')[0].textContent = 'CURRENT';
+  document.querySelectorAll('.current-label')[1].textContent = 'CURRENT';
 };
+
+// RULES
+const modal = document.querySelector('.modal');
+const overlay = document.querySelector('.overlay');
+
+document.addEventListener('keydown', function (e) {
+  // console.log(e.key);
+
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+    closeModal();
+  }
+});
+
+const openModal = function () {
+  modal.classList.remove('hidden');
+  overlay.classList.remove('hidden');
+};
+
+const closeModal = function () {
+  modal.classList.add('hidden');
+  overlay.classList.add('hidden');
+};
+
+btnRule.addEventListener('click', openModal);
+overlay.addEventListener('click', closeModal);
+
+// 以上RULES
 // function startingCondition() {
 // display
 //   score0El.textContent = 0;
@@ -140,14 +171,21 @@ btnHold.addEventListener('click', function () {
       scores[activePlayer];
     // 2. Check if player's score is >=100
     // Finish the game
-    if (scores[activePlayer] >= 20) {
+    if (scores[activePlayer] >= 50) {
       playersEl[activePlayer].classList.remove('player--active');
       playersEl[activePlayer].classList.add('player--winner');
       playing = false;
       diceEl.classList.add('hidden');
+      document.querySelector(`#current--${activePlayer}`).textContent =
+        'Congrats!!!';
+      document.querySelectorAll('.current-label')[activePlayer].textContent =
+        '✨';
     } else {
       // Switch to the next player
       switchPlayer();
+      currentScore = 0;
+      current0El.textContent = 0;
+      current1El.textContent = 0;
     }
     //   if (!activePlayer) {
     // score0El.textContent = Number(score0El.textContent) + currentScore;
@@ -156,9 +194,6 @@ btnHold.addEventListener('click', function () {
     //   }
     //   activePlayer = !activePlayer;
     //   activeDisplay(activePlayer);
-    currentScore = 0;
-    current0El.textContent = 0;
-    current1El.textContent = 0;
   }
 });
 
